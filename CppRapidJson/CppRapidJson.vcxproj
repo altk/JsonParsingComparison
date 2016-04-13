@@ -59,6 +59,7 @@
     <ClInclude Include="FrameworkViewSource.h" />
     <ClInclude Include="MTL.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SampleModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

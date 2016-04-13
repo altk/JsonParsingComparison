@@ -77,6 +77,9 @@
     <ClInclude Include="Executor.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="SampleModel.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
