@@ -4,4 +4,5 @@
 #include <wrl/client.h>
 #include <memory>
 #include <vector>
-#include "rapidjson\rapidjson.h"
+#include <chrono>
+#include "rapidjson/document.h"

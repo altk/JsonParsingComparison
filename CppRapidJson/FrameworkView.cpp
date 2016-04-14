@@ -36,6 +36,8 @@ HRESULT FrameworkView::Run()
     using namespace ABI::Windows::ApplicationModel::Core;
     using namespace ABI::Windows::UI::Core;
 
+    _coreWindow->Activate();
+
     ComPtr<ICoreDispatcher> dispatcher;
 
     Check(_coreWindow->get_Dispatcher(&dispatcher));

@@ -6,8 +6,8 @@
  /* File created by MIDL compiler version 8.00.0613 */
 /* at Tue Jan 19 06:14:07 2038
  */
-/* Compiler settings for C:\Users\VD75B~1.DRO\AppData\Local\Temp\CppRapidJson.idl-4cdac19d:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0613 
+/* Compiler settings for C:\Users\VD75B~1.DRO\AppData\Local\Temp\CppRapidJson.idl-cfe76ca1:
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=ARM 8.00.0613 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
