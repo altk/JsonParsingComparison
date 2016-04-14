@@ -33,7 +33,7 @@ void Executor::PerformComputations() noexcept
 
     auto beginTime = high_resolution_clock::now();
 
-    document.Parse(dataSource.data());
+    document.ParseInsitu(const_cast<wchar_t*>(dataSource.data()));
 
     vector<SampleModel> result;
 
