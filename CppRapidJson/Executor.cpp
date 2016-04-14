@@ -2,16 +2,18 @@
 #include "Executor.h"
 #include "Data.h"
 #include "SampleModel.h"
+#include "LocalSettings.h"
+#include <MTL.h>
 
 using namespace CppRapidJson;
 
 void Executor::Execute() noexcept
 {
-    /*if (IsDebuggerPresent())
+    if (IsDebuggerPresent())
     {
         ShowResult();
     }
-    else*/
+    else
     {
         PerformComputations();
     }
@@ -19,6 +21,8 @@ void Executor::Execute() noexcept
 
 void Executor::PerformComputations() noexcept
 {
+    using namespace ABI::Windows::Foundation;
+    using namespace MTL;
     using namespace std::chrono;
     using namespace std;
     using namespace rapidjson;
@@ -57,9 +61,12 @@ void Executor::PerformComputations() noexcept
         auto &greeting = beginRef[L"greeting"];
         auto &isActive = beginRef[L"isActive"];
 
-        vector<Tag> tagModels;
+        vector<wstring> tagModels;
         auto endTags = tags.End();
-        for (auto beginTags = tags.Begin(); beginTags != endTags; ++beginTags) { }
+        for (auto beginTags = tags.Begin(); beginTags != endTags; ++beginTags)
+        {
+            tagModels.emplace_back(beginTags->GetString(), beginTags->GetStringLength());
+        }
 
         result.emplace_back(wstring(id.GetString(), id.GetStringLength()),
                             uint32_t(index.GetUint()),
@@ -76,7 +83,7 @@ void Executor::PerformComputations() noexcept
                             wstring(about.GetString(), about.GetStringLength()),
                             double_t(latitude.GetDouble()),
                             double_t(longitude.GetDouble()),
-                            vector<Tag>(move(tagModels)),
+                            vector<wstring>(move(tagModels)),
                             wstring(greeting.GetString(), greeting.GetStringLength()),
                             bool(isActive.GetBool()));
     }
@@ -84,11 +91,62 @@ void Executor::PerformComputations() noexcept
     auto endTime = high_resolution_clock::now();
     auto ms = duration_cast<milliseconds>(endTime - beginTime).count();
 
-    OutputDebugStringW(to_wstring(ms).data());
-    OutputDebugStringW(L"\r\n");
+    ComPtr<IPropertyValueStatics> propertyValueStatics;
+    ComPtr<IPropertyValue> propertyValue;
 
-    OutputDebugStringW(result[0].getEmail().data());
-    OutputDebugStringW(L"\r\n");;
+    if (SUCCEEDED(GetActivationFactory(HStringReference(RuntimeClass_Windows_Foundation_PropertyValue).Get(), &propertyValueStatics)))
+    {
+        if (SUCCEEDED( propertyValueStatics->CreateInt64(ms, &propertyValue)))
+        {
+            LocalSettings::SetValue(HStringReference(L"milliseconds").Get(), propertyValue.Get());
+        }
+
+        propertyValue.Release();
+
+        if (SUCCEEDED(propertyValueStatics->CreateInt64(result.size(), &propertyValue)))
+        {
+            LocalSettings::SetValue(HStringReference(L"counts").Get(), propertyValue.Get());
+        }
+    }
+
+    exit(0);
 }
 
-void Executor::ShowResult() noexcept {}
+void Executor::ShowResult() noexcept
+{
+    using namespace ABI::Windows::Foundation;
+    using namespace MTL;
+    using namespace std;
+
+    auto millisecondsInspectable = CreateComPtr(LocalSettings::GetValue(HStringReference(L"milliseconds").Get()));
+    if (millisecondsInspectable)
+    {
+        ComPtr<IPropertyValue> propertyValue;
+        if (SUCCEEDED(millisecondsInspectable.As(&propertyValue)))
+        {
+            int64_t milliseconds;
+            if (SUCCEEDED( propertyValue->GetInt64(&milliseconds)))
+            {
+                OutputDebugStringW(to_wstring(milliseconds).data());
+                OutputDebugStringW(L"\r\n");
+            }
+        }
+    }
+
+    auto countsInspectable = CreateComPtr(LocalSettings::GetValue(HStringReference(L"counts").Get()));
+    if (countsInspectable)
+    {
+        ComPtr<IPropertyValue> propertyValue;
+        if (SUCCEEDED(countsInspectable.As(&propertyValue)))
+        {
+            int64_t counts;
+            if (SUCCEEDED(propertyValue->GetInt64(&counts)))
+            {
+                OutputDebugStringW(to_wstring(counts).data());
+                OutputDebugStringW(L"\r\n");
+            }
+        }
+    }
+
+    __debugbreak();
+}

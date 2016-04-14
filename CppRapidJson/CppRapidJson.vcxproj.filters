@@ -57,6 +57,9 @@
     <ClCompile Include="Executor.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="LocalSettings.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h">
@@ -78,6 +81,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="SampleModel.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalSettings.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

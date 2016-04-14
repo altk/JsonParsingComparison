@@ -83,6 +83,7 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LocalSettings.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="Executor.h" />
     <ClInclude Include="FrameworkView.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="Executor.cpp" />
     <ClCompile Include="FrameworkView.cpp" />
     <ClCompile Include="FrameworkViewSource.cpp" />
+    <ClCompile Include="LocalSettings.cpp" />
     <ClCompile Include="MTL.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

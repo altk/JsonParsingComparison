@@ -15,8 +15,6 @@ namespace CppRapidJson
         Strawberry,
     };
 
-    enum class Tag { };
-
     class SampleModel final
     {
     public:
@@ -35,7 +33,7 @@ namespace CppRapidJson
                     std::wstring about,
                     double_t latitude,
                     double_t longitude,
-                    std::vector<Tag> tags,
+                    std::vector<std::wstring> tags,
                     std::wstring greeting,
                     bool isActive) noexcept
             : _id(move(id)),
@@ -228,7 +226,7 @@ namespace CppRapidJson
             return _longitude;
         }
 
-        const std::vector<Tag>& getTags() const
+        const std::vector<std::wstring>& getTags() const
         {
             return _tags;
         }
@@ -259,7 +257,7 @@ namespace CppRapidJson
         std::wstring _about;
         double_t _latitude;
         double_t _longitude;
-        std::vector<Tag> _tags;
+        std::vector<std::wstring> _tags;
         std::wstring _greeting;
         bool _isActive;
     };

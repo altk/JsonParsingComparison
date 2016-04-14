@@ -936,7 +936,7 @@ namespace MTL
 		template <typename U>
 		STDMETHODIMP As(Internals::ComPtrRef<U> target) noexcept
 		{
-			ASSERT(nullptr != _pointer);
+			assert(nullptr != _pointer);
 
 			return _pointer->QueryInterface(static_cast<U**>(target));
 		}
