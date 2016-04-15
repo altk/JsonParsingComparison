@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7cf8521b-f17f-49e6-a394-795fb43e3317}</ProjectGuid>
     <Keyword>DirectXApp</Keyword>
-    <RootNamespace>CppRapidJson</RootNamespace>
+    <RootNamespace>Cpp</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -23,7 +23,8 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageCertificateKeyFile>CppRapidJson_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Cpp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>82F5C3674FC47D41BC38261054BAE27BD18B18A8</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -46,31 +47,37 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>RAPIDJSON_ENDIAN=RAPIDJSON_LITTLEENDIAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>RAPIDJSON_ENDIAN=RAPIDJSON_LITTLEENDIAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <PreprocessorDefinitions>RAPIDJSON_ENDIAN=RAPIDJSON_LITTLEENDIAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
       <PreprocessorDefinitions>RAPIDJSON_ENDIAN=RAPIDJSON_LITTLEENDIAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PreprocessorDefinitions>RAPIDJSON_ENDIAN=RAPIDJSON_LITTLEENDIAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PreprocessorDefinitions>RAPIDJSON_ENDIAN=RAPIDJSON_LITTLEENDIAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -108,11 +115,11 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="CppRapidJson_TemporaryKey.pfx" />
+    <None Include="Cpp.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <MidlRT Include="CppRapidJson.idl" />
+    <MidlRT Include="Cpp.idl" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\Build\common.targets" />
   <Import Project="$(SolutionDir)\Build\midlrt.targets" />

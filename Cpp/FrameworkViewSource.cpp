@@ -2,17 +2,17 @@
 #include <FrameworkViewSource.h>
 #include <FrameworkView.h>
 
-using namespace CppRapidJson;
+using namespace Cpp;
 using namespace MTL;
 
 STDMETHODIMP FrameworkViewSource::GetRuntimeClassName(HSTRING * className)
 {
-    *className = HString(RuntimeClass_CppRapidJson_FrameworkViewSource).Detach();
+    *className = HString(RuntimeClass_Cpp_FrameworkViewSource).Detach();
 
     return S_OK;
 }
 
-STDMETHODIMP CppRapidJson::FrameworkViewSource::CreateView(ABI::Windows::ApplicationModel::Core::IFrameworkView ** viewProvider)
+STDMETHODIMP Cpp::FrameworkViewSource::CreateView(ABI::Windows::ApplicationModel::Core::IFrameworkView ** viewProvider)
 {
     *viewProvider = CreateComPtr(new FrameworkView()).Detach();
 

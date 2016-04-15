@@ -3,12 +3,12 @@
 #include <FrameworkView.h>
 #include <Executor.h>
 
-using namespace CppRapidJson;
+using namespace Cpp;
 using namespace MTL;
 
 HRESULT FrameworkView::GetRuntimeClassName(HSTRING* className)
 {
-    *className = HString(RuntimeClass_CppRapidJson_FrameworkView).Detach();
+    *className = HString(RuntimeClass_Cpp_FrameworkView).Detach();
     return S_OK;
 }
 

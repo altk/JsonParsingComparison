@@ -1,7 +1,7 @@
 #include <pch.h>
 #include <Data.h>
 
-using namespace CppRapidJson;
+using namespace Cpp;
 
 std::wstring create() noexcept
 {

@@ -1,6 +1,6 @@
 import "Windows.ApplicationModel.Core.idl";
 
-namespace CppRapidJson
+namespace Cpp
 {
     runtimeclass FrameworkView;
 
@@ -8,7 +8,7 @@ namespace CppRapidJson
 
 }
 
-namespace CppRapidJson
+namespace Cpp
 {
     [version(1.0)]
     [activatable(1.0)]

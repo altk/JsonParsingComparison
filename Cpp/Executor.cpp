@@ -6,7 +6,7 @@
 #include <MTL.h>
 #include <windows.data.json.h>
 
-using namespace CppRapidJson;
+using namespace Cpp;
 
 std::vector<SampleModel> rapidJson(wchar_t *source) noexcept
 {

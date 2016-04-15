@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppRapidJson", "CppRapidJson\CppRapidJson.vcxproj", "{7CF8521B-F17F-49E6-A394-795FB43E3317}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpp", "Cpp\Cpp.vcxproj", "{7CF8521B-F17F-49E6-A394-795FB43E3317}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

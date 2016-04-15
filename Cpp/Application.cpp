@@ -184,6 +184,6 @@ void CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int) noexcept
     GetActivationFactory(HStringReference(RuntimeClass_Windows_ApplicationModel_Core_CoreApplication).Get(),
                          &coreApplication);
 
-    coreApplication->Run(CreateComPtr(new CppRapidJson::FrameworkViewSource()).Detach());
+    coreApplication->Run(CreateComPtr(new Cpp::FrameworkViewSource()).Detach());
 }
 

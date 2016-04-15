@@ -1,8 +1,8 @@
 #pragma once
 #include <MTL.h>
-#include <CppRapidJson_h.h>
+#include <Cpp_h.h>
 
-namespace CppRapidJson
+namespace Cpp
 {
     class FrameworkViewSource final : public MTL::RuntimeClass<ABI::Windows::ApplicationModel::Core::IFrameworkViewSource>
     {

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-namespace CppRapidJson
+namespace Cpp
 {
     enum class Gender
     {

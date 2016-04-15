@@ -91,10 +91,10 @@
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CppRapidJson_TemporaryKey.pfx" />
     <None Include="packages.config" />
+    <None Include="Cpp.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <MidlRT Include="CppRapidJson.idl" />
+    <MidlRT Include="Cpp.idl" />
   </ItemGroup>
 </Project>

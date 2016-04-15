@@ -1,7 +1,7 @@
 #include <pch.h>
 #include <LocalSettings.h>
 
-using namespace CppRapidJson;
+using namespace Cpp;
 using namespace MTL;
 using namespace std;
 

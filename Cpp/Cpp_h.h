@@ -6,7 +6,7 @@
  /* File created by MIDL compiler version 8.00.0613 */
 /* at Tue Jan 19 06:14:07 2038
  */
-/* Compiler settings for C:\Users\VD75B~1.DRO\AppData\Local\Temp\CppRapidJson.idl-cfe76ca1:
+/* Compiler settings for C:\Users\VD75B~1.DRO\AppData\Local\Temp\Cpp.idl-97bd6b80:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=ARM 8.00.0613 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
@@ -32,8 +32,8 @@
 #endif /* __RPCNDR_H_VERSION__ */
 
 
-#ifndef __CppRapidJson_h_h__
-#define __CppRapidJson_h_h__
+#ifndef __Cpp_h_h__
+#define __Cpp_h_h__
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
@@ -58,44 +58,44 @@ extern "C"{
 #endif 
 
 
-/* interface __MIDL_itf_CppRapidJson_0000_0000 */
+/* interface __MIDL_itf_Cpp_0000_0000 */
 /* [local] */ 
 
 #ifdef __cplusplus
 namespace ABI {
-namespace CppRapidJson {
+namespace Cpp {
 class FrameworkView;
-} /*CppRapidJson*/
+} /*Cpp*/
 }
 #endif
 
 #ifdef __cplusplus
 namespace ABI {
-namespace CppRapidJson {
+namespace Cpp {
 class FrameworkViewSource;
-} /*CppRapidJson*/
+} /*Cpp*/
 }
 #endif
 
-#ifndef RUNTIMECLASS_CppRapidJson_FrameworkViewSource_DEFINED
-#define RUNTIMECLASS_CppRapidJson_FrameworkViewSource_DEFINED
-extern const __declspec(selectany) _Null_terminated_ WCHAR RuntimeClass_CppRapidJson_FrameworkViewSource[] = L"CppRapidJson.FrameworkViewSource";
+#ifndef RUNTIMECLASS_Cpp_FrameworkViewSource_DEFINED
+#define RUNTIMECLASS_Cpp_FrameworkViewSource_DEFINED
+extern const __declspec(selectany) _Null_terminated_ WCHAR RuntimeClass_Cpp_FrameworkViewSource[] = L"Cpp.FrameworkViewSource";
 #endif
-#ifndef RUNTIMECLASS_CppRapidJson_FrameworkView_DEFINED
-#define RUNTIMECLASS_CppRapidJson_FrameworkView_DEFINED
-extern const __declspec(selectany) _Null_terminated_ WCHAR RuntimeClass_CppRapidJson_FrameworkView[] = L"CppRapidJson.FrameworkView";
+#ifndef RUNTIMECLASS_Cpp_FrameworkView_DEFINED
+#define RUNTIMECLASS_Cpp_FrameworkView_DEFINED
+extern const __declspec(selectany) _Null_terminated_ WCHAR RuntimeClass_Cpp_FrameworkView[] = L"Cpp.FrameworkView";
 #endif
 
 
-/* interface __MIDL_itf_CppRapidJson_0000_0000 */
+/* interface __MIDL_itf_Cpp_0000_0000 */
 /* [local] */ 
 
 
 
 
 
-extern RPC_IF_HANDLE __MIDL_itf_CppRapidJson_0000_0000_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_CppRapidJson_0000_0000_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_Cpp_0000_0000_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_Cpp_0000_0000_v0_0_s_ifspec;
 
 /* Additional Prototypes for ALL interfaces */
 

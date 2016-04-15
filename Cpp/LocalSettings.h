@@ -2,7 +2,7 @@
 #include <MTL.h>
 #include <windows.storage.h>
 
-namespace CppRapidJson
+namespace Cpp
 {
     class LocalSettings final
     {
