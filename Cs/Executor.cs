@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Data.Json;
 using Windows.Storage;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Cs
 {
@@ -24,13 +25,68 @@ namespace Cs
             }
         }
 
+        private static IReadOnlyList<SampleModel> JsonNet(String jsonSource)
+        {
+            var result = new List<SampleModel>();
+
+            var jArray = JArray.Parse(jsonSource);
+            foreach (var jToken in jArray)
+            {
+                var jObject = (JObject) jToken;
+
+                var id = jObject.GetValue("_id");
+                var index = jObject.GetValue("index");
+                var guid = jObject.GetValue("guid");
+                var balance = jObject.GetValue("balance");
+                var picture = jObject.GetValue("picture");
+                var age = jObject.GetValue("age");
+                var name = jObject.GetValue("name");
+                var gender = jObject.GetValue("gender");
+                var company = jObject.GetValue("company");
+                var email = jObject.GetValue("email");
+                var phone = jObject.GetValue("phone");
+                var address = jObject.GetValue("address");
+                var about = jObject.GetValue("about");
+                var latitude = jObject.GetValue("latitude");
+                var longitude = jObject.GetValue("longitude");
+                var greeting = jObject.GetValue("greeting");
+                var isActive = jObject.GetValue("isActive");
+                var tags = (JArray) jObject.GetValue("tags");
+
+                result.Add(new SampleModel((String) id,
+                                           (UInt16) index,
+                                           (String) guid,
+                                           (Double) balance,
+                                           (String) picture,
+                                           (UInt16) age,
+                                           (String) name,
+                                           (Gender) Enum.Parse(typeof (Gender), (String) gender, true),
+                                           (String) company,
+                                           (String) email,
+                                           (String) phone,
+                                           (String) address,
+                                           (String) about,
+                                           (Double) latitude,
+                                           (Double) longitude,
+                                           tags.Select(token => (String) token).ToList(),
+                                           (String) greeting,
+                                           (Boolean) isActive));
+            }
+            return result;
+        }
+
+        private static IReadOnlyList<SampleModel> JsonNetReflection(String jsonSource)
+        {
+            return JsonConvert.DeserializeObject<List<SampleModel>>(jsonSource);
+        }
+
         private static void PerformComputations()
         {
             var jsonSource = Data.GetJsonSource();
 
             var stopwatch = Stopwatch.StartNew();
 
-            var models = JsonNetReflection(jsonSource);
+            var models = JsonNet(jsonSource);
 
             stopwatch.Stop();
 
@@ -41,9 +97,14 @@ namespace Cs
             CoreApplication.Exit();
         }
 
-        private static IReadOnlyList<SampleModel> JsonNetReflection(String jsonSource)
+        private static void ShowResult()
         {
-            return JsonConvert.DeserializeObject<List<SampleModel>>(jsonSource);
+            var localSettingsValues = ApplicationData.Current.LocalSettings.Values;
+
+            Debug.WriteLine(localSettingsValues["milliseconds"]);
+            Debug.WriteLine(localSettingsValues["count"]);
+
+            Debugger.Break();
         }
 
         private static IReadOnlyList<SampleModel> SystemApi(String jsonSource)
@@ -98,16 +159,6 @@ namespace Cs
             }
 
             return result;
-        }
-
-        private static void ShowResult()
-        {
-            var localSettingsValues = ApplicationData.Current.LocalSettings.Values;
-
-            Debug.WriteLine(localSettingsValues["milliseconds"]);
-            Debug.WriteLine(localSettingsValues["count"]);
-
-            Debugger.Break();
         }
     }
 }
