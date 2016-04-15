@@ -4,37 +4,17 @@
 #include "SampleModel.h"
 #include "LocalSettings.h"
 #include <MTL.h>
+#include <windows.data.json.h>
 
 using namespace CppRapidJson;
 
-void Executor::Execute() noexcept
+std::vector<SampleModel> rapidJson(wchar_t *source)
 {
-    if (IsDebuggerPresent())
-    {
-        ShowResult();
-    }
-    else
-    {
-        PerformComputations();
-    }
-}
-
-void Executor::PerformComputations() noexcept
-{
-    using namespace ABI::Windows::Foundation;
-    using namespace MTL;
-    using namespace std::chrono;
     using namespace std;
     using namespace rapidjson;
 
     GenericDocument<UTF16LE<>> document;
-
-    auto &dataSource = Data::GetJsonSource();
-
-    auto beginTime = high_resolution_clock::now();
-
-    document.ParseInsitu(const_cast<wchar_t*>(dataSource.data()));
-
+    document.ParseInsitu(source);
     vector<SampleModel> result;
 
     auto endModels = document.End();
@@ -87,6 +67,138 @@ void Executor::PerformComputations() noexcept
                             wstring(greeting.GetString(), greeting.GetStringLength()),
                             bool(isActive.GetBool()));
     }
+
+    return result;
+}
+
+std::vector<SampleModel> systemApi(wchar_t *source)
+{
+    using namespace std;
+    using namespace MTL;
+    using namespace ABI::Windows::Data::Json;
+    using namespace ABI::Windows::Foundation::Collections;
+
+    vector<SampleModel> result;
+
+    ComPtr<IJsonArrayStatics> jsonArrayStatics;
+    if (SUCCEEDED(GetActivationFactory(HStringReference(RuntimeClass_Windows_Data_Json_JsonArray).Get(), &jsonArrayStatics)))
+    {
+        ComPtr<IJsonArray> rootJsonArray;
+        if (SUCCEEDED(jsonArrayStatics->Parse(HStringReference(source).Get(), &rootJsonArray)))
+        {
+            ComPtr<IIterable<IJsonValue*>> iterable;
+            if (SUCCEEDED(rootJsonArray.As(&iterable)))
+            {
+                for (auto jsonValue : iterable.Get())
+                {
+                    ComPtr<IJsonObject> jsonObject;
+                    if (SUCCEEDED(jsonValue->GetObject(&jsonObject)))
+                    {
+                        HString id;
+                        double_t index;
+                        HString guid;
+                        double_t balance;
+                        HString picture;
+                        double_t age;
+                        HString name;
+                        HString gender;
+                        HString company;
+                        HString email;
+                        HString phone;
+                        HString address;
+                        HString about;
+                        double_t latitude;
+                        double_t longitude;
+                        vector<wstring> tags;
+                        HString greeting;
+                        boolean isActive;
+
+                        jsonObject->GetNamedString(HStringReference(L"_id").Get(), &id);
+                        jsonObject->GetNamedNumber(HStringReference(L"index").Get(), &index);
+                        jsonObject->GetNamedString(HStringReference(L"guid").Get(), &guid);
+                        jsonObject->GetNamedNumber(HStringReference(L"balance").Get(), &balance);
+                        jsonObject->GetNamedString(HStringReference(L"picture").Get(), &picture);
+                        jsonObject->GetNamedNumber(HStringReference(L"age").Get(), &age);
+                        jsonObject->GetNamedString(HStringReference(L"name").Get(), &name);
+                        jsonObject->GetNamedString(HStringReference(L"gender").Get(), &gender);
+                        jsonObject->GetNamedString(HStringReference(L"company").Get(), &company);
+                        jsonObject->GetNamedString(HStringReference(L"email").Get(), &email);
+                        jsonObject->GetNamedString(HStringReference(L"phone").Get(), &phone);
+                        jsonObject->GetNamedString(HStringReference(L"address").Get(), &address);
+                        jsonObject->GetNamedString(HStringReference(L"about").Get(), &about);
+                        jsonObject->GetNamedNumber(HStringReference(L"latitude").Get(), &latitude);
+                        jsonObject->GetNamedNumber(HStringReference(L"longitude").Get(), &longitude);
+                        jsonObject->GetNamedString(HStringReference(L"greeting").Get(), &greeting);
+                        jsonObject->GetNamedBoolean(HStringReference(L"isActive").Get(), &isActive);
+
+                        ComPtr<IJsonArray> tagsJsonArray;
+                        if (SUCCEEDED(jsonObject->GetNamedArray(HStringReference(L"tags").Get(), &tagsJsonArray)))
+                        {
+                            ComPtr<IIterable<IJsonValue*>> tagsIterable;
+                            if (SUCCEEDED(tagsJsonArray.As(&tagsIterable)))
+                            {
+                                for (auto tagJsonValue : tagsIterable.Get())
+                                {
+                                    HString tag;
+                                    if (SUCCEEDED(tagJsonValue->GetString(&tag)))
+                                    {
+                                        tags.emplace_back(tag.GetRawBuffer(), tag.Size());
+                                    }
+                                }
+                            }
+                        }
+
+                        result.emplace_back(wstring(id.GetRawBuffer(), id.Size()),
+                                            uint32_t(index),
+                                            wstring(guid.GetRawBuffer(), guid.Size()),
+                                            double_t(balance),
+                                            wstring(picture.GetRawBuffer(), picture.Size()),
+                                            uint8_t(age),
+                                            wstring(name.GetRawBuffer(), name.Size()),
+                                            Gender(wcscmp(L"female", gender.GetRawBuffer()) == 0 ? Gender::Female : Gender::Male),
+                                            wstring(company.GetRawBuffer(), company.Size()),
+                                            wstring(email.GetRawBuffer(), email.Size()),
+                                            wstring(phone.GetRawBuffer(), phone.Size()),
+                                            wstring(address.GetRawBuffer(), address.Size()),
+                                            wstring(about.GetRawBuffer(), about.Size()),
+                                            double_t(latitude),
+                                            double_t(longitude),
+                                            vector<wstring>(move(tags)),
+                                            wstring(greeting.GetRawBuffer(), greeting.Size()),
+                                            bool(isActive));
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+void Executor::Execute() noexcept
+{
+    if (IsDebuggerPresent())
+    {
+        ShowResult();
+    }
+    else
+    {
+        PerformComputations();
+    }
+}
+
+void Executor::PerformComputations() noexcept
+{
+    using namespace ABI::Windows::Foundation;
+    using namespace MTL;
+    using namespace std::chrono;
+    using namespace std;
+
+    auto &dataSource = Data::GetJsonSource();
+
+    auto beginTime = high_resolution_clock::now();
+
+    auto result = rapidJson(const_cast<wchar_t*>(dataSource.data()));
 
     auto endTime = high_resolution_clock::now();
     auto ms = duration_cast<milliseconds>(endTime - beginTime).count();
