@@ -182,7 +182,66 @@ std::vector<SampleModel> systemApi(wchar_t *source) noexcept
 
 std::vector<SampleModel> systemApiProjected(wchar_t *source) noexcept
 {
-    
+    using namespace Windows::Data::Json;
+    using namespace Platform;
+    using namespace std;
+
+    vector<SampleModel> result;
+
+    auto jsonArray = JsonArray::Parse(Platform::StringReference(source));
+
+    for (auto iterator = jsonArray->First(); iterator->HasCurrent; iterator->MoveNext())
+    {
+        auto jsonObject = iterator->Current->GetObject();
+
+        auto id = jsonObject->GetNamedString(StringReference(L"_id"));
+        auto index = jsonObject->GetNamedNumber(StringReference(L"index"));
+        auto guid = jsonObject->GetNamedString(StringReference(L"guid"));
+        auto balance = jsonObject->GetNamedNumber(StringReference(L"balance"));
+        auto picture = jsonObject->GetNamedString(StringReference(L"picture"));
+        auto age = jsonObject->GetNamedNumber(StringReference(L"age"));
+        auto name = jsonObject->GetNamedString(StringReference(L"name"));
+        auto gender = jsonObject->GetNamedString(StringReference(L"gender"));
+        auto company = jsonObject->GetNamedString(StringReference(L"company"));
+        auto email = jsonObject->GetNamedString(StringReference(L"email"));
+        auto phone = jsonObject->GetNamedString(StringReference(L"phone"));
+        auto address = jsonObject->GetNamedString(StringReference(L"address"));
+        auto about = jsonObject->GetNamedString(StringReference(L"about"));
+        auto latitude = jsonObject->GetNamedNumber(StringReference(L"latitude"));
+        auto longitude = jsonObject->GetNamedNumber(StringReference(L"longitude"));
+        auto greeting = jsonObject->GetNamedString(StringReference(L"greeting"));
+        auto isActive = jsonObject->GetNamedBoolean(StringReference(L"isActive"));
+
+        vector<wstring> tags;
+        auto tagsArray = jsonObject->GetNamedArray(StringReference(L"tags"));
+        for (auto tagsIterator = tagsArray->First(); tagsIterator->HasCurrent; tagsIterator->MoveNext())
+        {
+            auto tagValue = tagsIterator->Current;
+            auto tagString = tagValue->GetString();
+            tags.emplace_back(tagString->Data(), tagString->Length());
+        }
+
+        result.emplace_back(wstring(id->Data(), id->Length()),
+                            uint32_t(index),
+                            wstring(guid->Data(), guid->Length()),
+                            double_t(balance),
+                            wstring(picture->Data(), picture->Length()),
+                            uint8_t(age),
+                            wstring(name->Data(), name->Length()),
+                            Gender(wcscmp(L"female", gender->Data()) == 0 ? Gender::Female : Gender::Male),
+                            wstring(company->Data(), company->Length()),
+                            wstring(email->Data(), email->Length()),
+                            wstring(phone->Data(), phone->Length()),
+                            wstring(address->Data(), address->Length()),
+                            wstring(about->Data(), about->Length()),
+                            double_t(latitude),
+                            double_t(longitude),
+                            vector<wstring>(move(tags)),
+                            wstring(greeting->Data(), greeting->Length()),
+                            bool(isActive));
+    }
+
+    return result;
 }
 
 void Executor::Execute() noexcept
@@ -208,7 +267,7 @@ void Executor::PerformComputations() noexcept
 
     auto beginTime = high_resolution_clock::now();
 
-    auto result = systemApi(const_cast<wchar_t*>(dataSource.data()));
+    auto result = rapidJson(const_cast<wchar_t*>(dataSource.data()));
 
     auto endTime = high_resolution_clock::now();
     auto ms = duration_cast<milliseconds>(endTime - beginTime).count();
