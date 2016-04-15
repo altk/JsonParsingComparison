@@ -8,7 +8,7 @@
 
 using namespace CppRapidJson;
 
-std::vector<SampleModel> rapidJson(wchar_t *source)
+std::vector<SampleModel> rapidJson(wchar_t *source) noexcept
 {
     using namespace std;
     using namespace rapidjson;
@@ -16,6 +16,7 @@ std::vector<SampleModel> rapidJson(wchar_t *source)
     GenericDocument<UTF16LE<>> document;
     document.ParseInsitu(source);
     vector<SampleModel> result;
+    result.reserve(document.Size());
 
     auto endModels = document.End();
     for (auto beginModels = document.Begin(); beginModels != endModels; ++beginModels)
@@ -71,7 +72,7 @@ std::vector<SampleModel> rapidJson(wchar_t *source)
     return result;
 }
 
-std::vector<SampleModel> systemApi(wchar_t *source)
+std::vector<SampleModel> systemApi(wchar_t *source) noexcept
 {
     using namespace std;
     using namespace MTL;
@@ -86,9 +87,13 @@ std::vector<SampleModel> systemApi(wchar_t *source)
         ComPtr<IJsonArray> rootJsonArray;
         if (SUCCEEDED(jsonArrayStatics->Parse(HStringReference(source).Get(), &rootJsonArray)))
         {
-            ComPtr<IIterable<IJsonValue*>> iterable;
+            ComPtr<IVector<IJsonValue*>> iterable;
             if (SUCCEEDED(rootJsonArray.As(&iterable)))
             {
+                unsigned size;
+                iterable->get_Size(&size);
+                result.reserve(size);
+
                 for (auto jsonValue : iterable.Get())
                 {
                     ComPtr<IJsonObject> jsonObject;
@@ -175,6 +180,11 @@ std::vector<SampleModel> systemApi(wchar_t *source)
     return result;
 }
 
+std::vector<SampleModel> systemApiProjected(wchar_t *source) noexcept
+{
+    
+}
+
 void Executor::Execute() noexcept
 {
     if (IsDebuggerPresent())
@@ -198,7 +208,7 @@ void Executor::PerformComputations() noexcept
 
     auto beginTime = high_resolution_clock::now();
 
-    auto result = rapidJson(const_cast<wchar_t*>(dataSource.data()));
+    auto result = systemApi(const_cast<wchar_t*>(dataSource.data()));
 
     auto endTime = high_resolution_clock::now();
     auto ms = duration_cast<milliseconds>(endTime - beginTime).count();

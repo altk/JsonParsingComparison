@@ -9,7 +9,7 @@ std::wstring create() noexcept
 
     std::wstring result;
     result.append(L"[");
-    for (size_t i = 0; i < 99; i++)
+    for (size_t i = 0; i < 999; i++)
     {
         result.append(literal);
         result.append(L",");
