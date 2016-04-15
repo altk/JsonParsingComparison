@@ -6,6 +6,7 @@ using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Json;
 using Windows.Storage;
+using Newtonsoft.Json;
 
 namespace Cs
 {
@@ -29,7 +30,7 @@ namespace Cs
 
             var stopwatch = Stopwatch.StartNew();
 
-            var models = SystemApi(jsonSource);
+            var models = JsonNetReflection(jsonSource);
 
             stopwatch.Stop();
 
@@ -38,6 +39,11 @@ namespace Cs
             localSettingsValues["count"] = models.Count;
 
             CoreApplication.Exit();
+        }
+
+        private static IReadOnlyList<SampleModel> JsonNetReflection(String jsonSource)
+        {
+            return JsonConvert.DeserializeObject<List<SampleModel>>(jsonSource);
         }
 
         private static IReadOnlyList<SampleModel> SystemApi(String jsonSource)
