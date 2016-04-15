@@ -8,13 +8,7 @@ namespace Cpp
         Male,
         Female
     };
-
-    enum class Fruit
-    {
-        Apple,
-        Strawberry,
-    };
-
+    
     class SampleModel final
     {
     public:
