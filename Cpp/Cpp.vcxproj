@@ -23,7 +23,7 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageCertificateKeyFile>Cpp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Cpp.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>82F5C3674FC47D41BC38261054BAE27BD18B18A8</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
