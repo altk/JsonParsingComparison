@@ -25,7 +25,7 @@ namespace Cs
             }
         }
 
-        private static IReadOnlyList<SampleModel> JsonNet(String jsonSource)
+        private static IReadOnlyList<SampleModel> JsonNetParseArray(String jsonSource)
         {
             var result = new List<SampleModel>();
 
@@ -75,18 +75,66 @@ namespace Cs
             return result;
         }
 
-        private static IReadOnlyList<SampleModel> JsonNetReflection(String jsonSource)
+        private static SampleModel JsonNetParseMode(String jsonSource)
+        {
+            var jObject = JObject.Parse(jsonSource);
+
+            var id = jObject.GetValue("_id");
+            var index = jObject.GetValue("index");
+            var guid = jObject.GetValue("guid");
+            var balance = jObject.GetValue("balance");
+            var picture = jObject.GetValue("picture");
+            var age = jObject.GetValue("age");
+            var name = jObject.GetValue("name");
+            var gender = jObject.GetValue("gender");
+            var company = jObject.GetValue("company");
+            var email = jObject.GetValue("email");
+            var phone = jObject.GetValue("phone");
+            var address = jObject.GetValue("address");
+            var about = jObject.GetValue("about");
+            var latitude = jObject.GetValue("latitude");
+            var longitude = jObject.GetValue("longitude");
+            var greeting = jObject.GetValue("greeting");
+            var isActive = jObject.GetValue("isActive");
+            var tags = (JArray) jObject.GetValue("tags");
+
+            return new SampleModel((String) id,
+                                   (UInt16) index,
+                                   (String) guid,
+                                   (Double) balance,
+                                   (String) picture,
+                                   (UInt16) age,
+                                   (String) name,
+                                   (Gender) Enum.Parse(typeof (Gender), (String) gender, true),
+                                   (String) company,
+                                   (String) email,
+                                   (String) phone,
+                                   (String) address,
+                                   (String) about,
+                                   (Double) latitude,
+                                   (Double) longitude,
+                                   tags.Select(token => (String) token).ToList(),
+                                   (String) greeting,
+                                   (Boolean) isActive);
+        }
+
+        private static IReadOnlyList<SampleModel> JsonNetReflectionParseArray(String jsonSource)
         {
             return JsonConvert.DeserializeObject<List<SampleModel>>(jsonSource);
         }
 
+        private static SampleModel JsonNetReflectionParseMode(String jsonSource)
+        {
+            return JsonConvert.DeserializeObject<SampleModel>(jsonSource);
+        }
+
         private static void PerformComputations()
         {
-            var jsonSource = Data.GetJsonSource();
+            var jsonSource = Data.GetBigJson();
 
             var stopwatch = Stopwatch.StartNew();
 
-            var models = JsonNet(jsonSource);
+            var models = JsonNetParseArray(jsonSource);
 
             stopwatch.Stop();
 
@@ -107,7 +155,7 @@ namespace Cs
             Debugger.Break();
         }
 
-        private static IReadOnlyList<SampleModel> SystemApi(String jsonSource)
+        private static IReadOnlyList<SampleModel> SystemApiParseArray(String jsonSource)
         {
             var result = new List<SampleModel>();
 
@@ -159,6 +207,51 @@ namespace Cs
             }
 
             return result;
+        }
+
+        private static SampleModel SystemApiParseMode(String jsonSource)
+        {
+            var jsonObject = JsonObject.Parse(jsonSource);
+            var tags = jsonObject.GetNamedArray("tags")
+                                 .Select(value => value.GetString())
+                                 .ToList();
+
+            var id = jsonObject.GetNamedString("_id");
+            var index = jsonObject.GetNamedNumber("index");
+            var guid = jsonObject.GetNamedString("guid");
+            var balance = jsonObject.GetNamedNumber("balance");
+            var picture = jsonObject.GetNamedString("picture");
+            var age = jsonObject.GetNamedNumber("age");
+            var name = jsonObject.GetNamedString("name");
+            var gender = jsonObject.GetNamedString("gender");
+            var company = jsonObject.GetNamedString("company");
+            var email = jsonObject.GetNamedString("email");
+            var phone = jsonObject.GetNamedString("phone");
+            var address = jsonObject.GetNamedString("address");
+            var about = jsonObject.GetNamedString("about");
+            var latitude = jsonObject.GetNamedNumber("latitude");
+            var longitude = jsonObject.GetNamedNumber("longitude");
+            var greeting = jsonObject.GetNamedString("greeting");
+            var isActive = jsonObject.GetNamedBoolean("isActive");
+
+            return new SampleModel(id,
+                                   (UInt16) index,
+                                   guid,
+                                   balance,
+                                   picture,
+                                   (UInt16) age,
+                                   name,
+                                   (Gender) Enum.Parse(typeof (Gender), gender, true),
+                                   company,
+                                   email,
+                                   phone,
+                                   address,
+                                   about,
+                                   latitude,
+                                   longitude,
+                                   tags,
+                                   greeting,
+                                   isActive);
         }
     }
 }
