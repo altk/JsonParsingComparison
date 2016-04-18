@@ -130,18 +130,18 @@ namespace Cs
 
         private static void PerformComputations()
         {
-            var jsonSource = Data.GetSmallJson();
+            var jsonSource = Data.GetBigJson();
 
             var stopwatch = Stopwatch.StartNew();
 
-            var models = new List<SampleModel>(10000);
+            //var models = new List<SampleModel>(10000);
 
-            for (var i = 0; i < 10000; ++i)
-            {
-                models.Add(JsonNetParseModel(jsonSource));
-            }
+            //for (var i = 0; i < 10000; ++i)
+            //{
+            //    models.Add(JsonNetParseModel(jsonSource));
+            //}
 
-            //var models = JsonNetParseArray(jsonSource);
+            var models = JsonNetParseArray(jsonSource);
 
             GC.Collect();
 

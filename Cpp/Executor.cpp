@@ -454,19 +454,21 @@ void Executor::PerformComputations() noexcept
     using namespace std::chrono;
     using namespace std;
 
-    auto dataSource = Data::GetSmallJson();
+    auto dataSource = Data::GetBigJson();
+
+    auto ptrDataSource = dataSource.data();
 
     auto beginTime = high_resolution_clock::now();
 
-    vector<SampleModel> result;
+    /*vector<SampleModel> result;
     result.reserve(10000);
     
     for (auto i = 0; i < 10000; ++i)
     {
-        result.emplace_back(MTLParseModel(dataSource.data()));
-    }
+        result.emplace_back(CppCxParseModel(ptrDataSource));
+    }*/
 
-    /*auto result = CppCxParseArray(dataSource.data());*/
+    auto result = RapidJsonParseArray(dataSource.data());
 
     auto endTime = high_resolution_clock::now();
     auto ms = duration_cast<milliseconds>(endTime - beginTime).count();
