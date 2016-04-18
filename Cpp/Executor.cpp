@@ -263,7 +263,7 @@ void Executor::PerformComputations() noexcept
     using namespace std::chrono;
     using namespace std;
 
-    auto &dataSource = Data::GetJsonSource();
+    auto &dataSource = Data::GetBigJson();
 
     auto beginTime = high_resolution_clock::now();
 

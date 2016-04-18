@@ -6,7 +6,7 @@
  /* File created by MIDL compiler version 8.00.0613 */
 /* at Tue Jan 19 06:14:07 2038
  */
-/* Compiler settings for C:\Users\VD75B~1.DRO\AppData\Local\Temp\Cpp.idl-97bd6b80:
+/* Compiler settings for C:\Users\VD75B~1.DRO\AppData\Local\Temp\Cpp.idl-51c22d7c:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=ARM 8.00.0613 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
