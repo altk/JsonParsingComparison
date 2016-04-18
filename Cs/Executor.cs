@@ -75,7 +75,7 @@ namespace Cs
             return result;
         }
 
-        private static SampleModel JsonNetParseMode(String jsonSource)
+        private static SampleModel JsonNetParseModel(String jsonSource)
         {
             var jObject = JObject.Parse(jsonSource);
 
@@ -123,18 +123,27 @@ namespace Cs
             return JsonConvert.DeserializeObject<List<SampleModel>>(jsonSource);
         }
 
-        private static SampleModel JsonNetReflectionParseMode(String jsonSource)
+        private static SampleModel JsonNetReflectionParseModel(String jsonSource)
         {
             return JsonConvert.DeserializeObject<SampleModel>(jsonSource);
         }
 
         private static void PerformComputations()
         {
-            var jsonSource = Data.GetBigJson();
+            var jsonSource = Data.GetSmallJson();
 
             var stopwatch = Stopwatch.StartNew();
 
-            var models = JsonNetParseArray(jsonSource);
+            var models = new List<SampleModel>(10000);
+
+            for (var i = 0; i < 10000; ++i)
+            {
+                models.Add(JsonNetParseModel(jsonSource));
+            }
+
+            //var models = JsonNetParseArray(jsonSource);
+
+            GC.Collect();
 
             stopwatch.Stop();
 
@@ -209,7 +218,7 @@ namespace Cs
             return result;
         }
 
-        private static SampleModel SystemApiParseMode(String jsonSource)
+        private static SampleModel SystemApiParseModel(String jsonSource)
         {
             var jsonObject = JsonObject.Parse(jsonSource);
             var tags = jsonObject.GetNamedArray("tags")
