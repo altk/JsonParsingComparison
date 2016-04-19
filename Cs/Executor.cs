@@ -27,58 +27,19 @@ namespace Cs
 
         private static IReadOnlyList<SampleModel> JsonNetParseArray(String jsonSource)
         {
-            var result = new List<SampleModel>();
-
-            var jArray = JArray.Parse(jsonSource);
-            foreach (var jToken in jArray)
-            {
-                var jObject = (JObject) jToken;
-
-                var id = jObject.GetValue("_id");
-                var index = jObject.GetValue("index");
-                var guid = jObject.GetValue("guid");
-                var balance = jObject.GetValue("balance");
-                var picture = jObject.GetValue("picture");
-                var age = jObject.GetValue("age");
-                var name = jObject.GetValue("name");
-                var gender = jObject.GetValue("gender");
-                var company = jObject.GetValue("company");
-                var email = jObject.GetValue("email");
-                var phone = jObject.GetValue("phone");
-                var address = jObject.GetValue("address");
-                var about = jObject.GetValue("about");
-                var latitude = jObject.GetValue("latitude");
-                var longitude = jObject.GetValue("longitude");
-                var greeting = jObject.GetValue("greeting");
-                var isActive = jObject.GetValue("isActive");
-                var tags = (JArray) jObject.GetValue("tags");
-
-                result.Add(new SampleModel((String) id,
-                                           (UInt16) index,
-                                           (String) guid,
-                                           (Double) balance,
-                                           (String) picture,
-                                           (UInt16) age,
-                                           (String) name,
-                                           (Gender) Enum.Parse(typeof (Gender), (String) gender, true),
-                                           (String) company,
-                                           (String) email,
-                                           (String) phone,
-                                           (String) address,
-                                           (String) about,
-                                           (Double) latitude,
-                                           (Double) longitude,
-                                           tags.Select(token => (String) token).ToList(),
-                                           (String) greeting,
-                                           (Boolean) isActive));
-            }
-            return result;
+            return JArray.Parse(jsonSource)
+                         .Cast<JObject>()
+                         .Select(JsonNetParseModel)
+                         .ToList();
         }
 
         private static SampleModel JsonNetParseModel(String jsonSource)
         {
-            var jObject = JObject.Parse(jsonSource);
+            return JsonNetParseModel(JObject.Parse(jsonSource));
+        }
 
+        private static SampleModel JsonNetParseModel(JObject jObject)
+        {
             var id = jObject.GetValue("_id");
             var index = jObject.GetValue("index");
             var guid = jObject.GetValue("guid");
@@ -166,61 +127,19 @@ namespace Cs
 
         private static IReadOnlyList<SampleModel> SystemApiParseArray(String jsonSource)
         {
-            var result = new List<SampleModel>();
-
-            var jsonArray = JsonArray.Parse(jsonSource);
-
-            foreach (var jsonValue in jsonArray)
-            {
-                var jsonObject = jsonValue.GetObject();
-                var tags = jsonObject.GetNamedArray("tags")
-                                     .Select(value => value.GetString())
-                                     .ToList();
-
-                var id = jsonObject.GetNamedString("_id");
-                var index = jsonObject.GetNamedNumber("index");
-                var guid = jsonObject.GetNamedString("guid");
-                var balance = jsonObject.GetNamedNumber("balance");
-                var picture = jsonObject.GetNamedString("picture");
-                var age = jsonObject.GetNamedNumber("age");
-                var name = jsonObject.GetNamedString("name");
-                var gender = jsonObject.GetNamedString("gender");
-                var company = jsonObject.GetNamedString("company");
-                var email = jsonObject.GetNamedString("email");
-                var phone = jsonObject.GetNamedString("phone");
-                var address = jsonObject.GetNamedString("address");
-                var about = jsonObject.GetNamedString("about");
-                var latitude = jsonObject.GetNamedNumber("latitude");
-                var longitude = jsonObject.GetNamedNumber("longitude");
-                var greeting = jsonObject.GetNamedString("greeting");
-                var isActive = jsonObject.GetNamedBoolean("isActive");
-
-                result.Add(new SampleModel(id,
-                                           (UInt16) index,
-                                           guid,
-                                           balance,
-                                           picture,
-                                           (UInt16) age,
-                                           name,
-                                           (Gender) Enum.Parse(typeof (Gender), gender, true),
-                                           company,
-                                           email,
-                                           phone,
-                                           address,
-                                           about,
-                                           latitude,
-                                           longitude,
-                                           tags,
-                                           greeting,
-                                           isActive));
-            }
-
-            return result;
+            return JsonArray.Parse(jsonSource)
+                            .Cast<JsonObject>()
+                            .Select(SystemApiParseModel)
+                            .ToList();
         }
 
         private static SampleModel SystemApiParseModel(String jsonSource)
         {
-            var jsonObject = JsonObject.Parse(jsonSource);
+            return SystemApiParseModel(JsonObject.Parse(jsonSource));
+        }
+
+        private static SampleModel SystemApiParseModel(JsonObject jsonObject)
+        {
             var tags = jsonObject.GetNamedArray("tags")
                                  .Select(value => value.GetString())
                                  .ToList();
