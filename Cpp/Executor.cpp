@@ -11,7 +11,6 @@ using namespace rapidjson;
 using namespace std;
 using namespace MTL;
 
-
 SampleModel RapidJsonParseModel(const GenericValue<UTF16LE<>> &value) noexcept
 {
     auto &id = value[L"_id"];
@@ -235,52 +234,7 @@ std::vector<SampleModel> RapidJsonParseArray(const wchar_t *source) noexcept
     auto endModels = document.End();
     for (auto beginModels = document.Begin(); beginModels != endModels; ++beginModels)
     {
-        auto &beginRef = *beginModels;
-
-        auto &id = beginRef[L"_id"];
-        auto &index = beginRef[L"index"];
-        auto &guid = beginRef[L"guid"];
-        auto &balance = beginRef[L"balance"];
-        auto &picture = beginRef[L"picture"];
-        auto &age = beginRef[L"age"];
-        auto &name = beginRef[L"name"];
-        auto &gender = beginRef[L"gender"];
-        auto &company = beginRef[L"company"];
-        auto &email = beginRef[L"email"];
-        auto &phone = beginRef[L"phone"];
-        auto &address = beginRef[L"address"];
-        auto &about = beginRef[L"about"];
-        auto &latitude = beginRef[L"latitude"];
-        auto &longitude = beginRef[L"longitude"];
-        auto &tags = beginRef[L"tags"];
-        auto &greeting = beginRef[L"greeting"];
-        auto &isActive = beginRef[L"isActive"];
-
-        vector<wstring> tagModels;
-        auto endTags = tags.End();
-        for (auto beginTags = tags.Begin(); beginTags != endTags; ++beginTags)
-        {
-            tagModels.emplace_back(beginTags->GetString(), beginTags->GetStringLength());
-        }
-
-        result.emplace_back(wstring(id.GetString(), id.GetStringLength()),
-                            uint32_t(index.GetUint()),
-                            wstring(guid.GetString(), guid.GetStringLength()),
-                            double_t(balance.GetDouble()),
-                            wstring(picture.GetString(), picture.GetStringLength()),
-                            uint8_t(age.GetUint()),
-                            wstring(name.GetString(), name.GetStringLength()),
-                            Gender(wcscmp(L"female", gender.GetString()) == 0 ? Gender::Female : Gender::Male),
-                            wstring(company.GetString(), company.GetStringLength()),
-                            wstring(email.GetString(), email.GetStringLength()),
-                            wstring(phone.GetString(), phone.GetStringLength()),
-                            wstring(address.GetString(), address.GetStringLength()),
-                            wstring(about.GetString(), about.GetStringLength()),
-                            double_t(latitude.GetDouble()),
-                            double_t(longitude.GetDouble()),
-                            vector<wstring>(move(tagModels)),
-                            wstring(greeting.GetString(), greeting.GetStringLength()),
-                            bool(isActive.GetBool()));
+        result.emplace_back(RapidJsonParseModel(*beginModels));
     }
 
     return result;

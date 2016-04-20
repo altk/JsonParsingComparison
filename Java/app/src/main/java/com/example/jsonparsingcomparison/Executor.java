@@ -10,11 +10,24 @@ import java.util.ArrayList;
 
 final class Executor
 {
-    public static void Execute()
+    static
+    {
+        System.loadLibrary("AndroidCpp");
+    }
+
+    public static native long rapidJsonParseArray();
+
+    public static native long rapidJsonParseModel();
+
+    public static void execute()
     {
         try
         {
-            PerformComputations();
+            rapidJsonParseArray();
+
+            rapidJsonParseModel();
+
+            performComputations();
         }
         catch (Exception e)
         {
@@ -22,7 +35,7 @@ final class Executor
         }
     }
 
-    private static void PerformComputations() throws Exception
+    private static void performComputations() throws Exception
     {
         final String jsonSource = Data.getBigJson();
 
