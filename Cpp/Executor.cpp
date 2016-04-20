@@ -7,33 +7,31 @@
 #include <windows.data.json.h>
 
 using namespace Cpp;
+using namespace rapidjson;
+using namespace std;
+using namespace MTL;
 
-SampleModel RapidJsonParseModel(const wchar_t *source) noexcept
+
+SampleModel RapidJsonParseModel(const GenericValue<UTF16LE<>> &value) noexcept
 {
-    using namespace std;
-    using namespace rapidjson;
-
-    GenericDocument<UTF16LE<>> document;
-    document.Parse(source);
-
-    auto &id = document[L"_id"];
-    auto &index = document[L"index"];
-    auto &guid = document[L"guid"];
-    auto &balance = document[L"balance"];
-    auto &picture = document[L"picture"];
-    auto &age = document[L"age"];
-    auto &name = document[L"name"];
-    auto &gender = document[L"gender"];
-    auto &company = document[L"company"];
-    auto &email = document[L"email"];
-    auto &phone = document[L"phone"];
-    auto &address = document[L"address"];
-    auto &about = document[L"about"];
-    auto &latitude = document[L"latitude"];
-    auto &longitude = document[L"longitude"];
-    auto &tags = document[L"tags"];
-    auto &greeting = document[L"greeting"];
-    auto &isActive = document[L"isActive"];
+    auto &id = value[L"_id"];
+    auto &index = value[L"index"];
+    auto &guid = value[L"guid"];
+    auto &balance = value[L"balance"];
+    auto &picture = value[L"picture"];
+    auto &age = value[L"age"];
+    auto &name = value[L"name"];
+    auto &gender = value[L"gender"];
+    auto &company = value[L"company"];
+    auto &email = value[L"email"];
+    auto &phone = value[L"phone"];
+    auto &address = value[L"address"];
+    auto &about = value[L"about"];
+    auto &latitude = value[L"latitude"];
+    auto &longitude = value[L"longitude"];
+    auto &tags = value[L"tags"];
+    auto &greeting = value[L"greeting"];
+    auto &isActive = value[L"isActive"];
 
     vector<wstring> tagModels;
     auto endTags = tags.End();
@@ -62,18 +60,21 @@ SampleModel RapidJsonParseModel(const wchar_t *source) noexcept
                        bool(isActive.GetBool()));
 }
 
-SampleModel MTLParseModel(const wchar_t* source) noexcept
+SampleModel RapidJsonParseModel(const wchar_t *source) noexcept
 {
     using namespace std;
-    using namespace MTL;
+    using namespace rapidjson;
+
+    GenericDocument<UTF16LE<>> document;
+    document.Parse(source);
+
+    return RapidJsonParseModel(document);
+}
+
+SampleModel MTLParseModel(ABI::Windows::Data::Json::IJsonObject *jsonObject)
+{
     using namespace ABI::Windows::Data::Json;
     using namespace ABI::Windows::Foundation::Collections;
-
-    ComPtr<IJsonObjectStatics> jsonObjectStatics;
-    GetActivationFactory(HStringReference(RuntimeClass_Windows_Data_Json_JsonObject).Get(), &jsonObjectStatics);
-     
-    ComPtr<IJsonObject> jsonObject;
-    jsonObjectStatics->Parse(HStringReference(source).Get(), &jsonObject);
 
     HString id;
     double_t index;
@@ -113,20 +114,17 @@ SampleModel MTLParseModel(const wchar_t* source) noexcept
     jsonObject->GetNamedBoolean(HStringReference(L"isActive").Get(), &isActive);
 
     ComPtr<IJsonArray> tagsJsonArray;
-    if (SUCCEEDED(jsonObject->GetNamedArray(HStringReference(L"tags").Get(), &tagsJsonArray)))
+    jsonObject->GetNamedArray(HStringReference(L"tags").Get(), &tagsJsonArray);
+     
+    ComPtr<IIterable<IJsonValue*>> tagsIterable;
+    tagsJsonArray.As(&tagsIterable);
+        
+    for (auto tagJsonValue : tagsIterable.Get())
     {
-        ComPtr<IIterable<IJsonValue*>> tagsIterable;
-        if (SUCCEEDED(tagsJsonArray.As(&tagsIterable)))
-        {
-            for (auto tagJsonValue : tagsIterable.Get())
-            {
-                HString tag;
-                if (SUCCEEDED(tagJsonValue->GetString(&tag)))
-                {
-                    tags.emplace_back(tag.GetRawBuffer(), tag.Size());
-                }
-            }
-        }
+        HString tag;
+        tagJsonValue->GetString(&tag);
+
+        tags.emplace_back(tag.GetRawBuffer(), tag.Size());
     }
 
     return SampleModel(wstring(id.GetRawBuffer(), id.Size()),
@@ -149,13 +147,24 @@ SampleModel MTLParseModel(const wchar_t* source) noexcept
                        bool(isActive));
 }
 
-SampleModel CppCxParseModel(const wchar_t* source) noexcept
+SampleModel MTLParseModel(const wchar_t* source) noexcept
 {
-    using namespace Windows::Data::Json;
+    using namespace ABI::Windows::Data::Json;
+    using namespace ABI::Windows::Foundation::Collections;
+
+    ComPtr<IJsonObjectStatics> jsonObjectStatics;
+    GetActivationFactory(HStringReference(RuntimeClass_Windows_Data_Json_JsonObject).Get(), &jsonObjectStatics);
+     
+    ComPtr<IJsonObject> jsonObject;
+    jsonObjectStatics->Parse(HStringReference(source).Get(), &jsonObject);
+
+    return MTLParseModel(jsonObject.Get());
+}
+
+SampleModel CppCxParseModel(Windows::Data::Json::JsonObject^ jsonObject)
+{
     using namespace Platform;
     using namespace std;
-
-    auto jsonObject = JsonObject::Parse(StringReference(source));
 
     auto id = jsonObject->GetNamedString(StringReference(L"_id"));
     auto index = jsonObject->GetNamedNumber(StringReference(L"index"));
@@ -202,6 +211,14 @@ SampleModel CppCxParseModel(const wchar_t* source) noexcept
                        vector<wstring>(move(tags)),
                        wstring(greeting->Data(), greeting->Length()),
                        bool(isActive));
+}
+
+SampleModel CppCxParseModel(const wchar_t* source) noexcept
+{
+    using namespace Windows::Data::Json;
+    using namespace Platform;
+
+    return CppCxParseModel(JsonObject::Parse(StringReference(source)));
 }
 
 std::vector<SampleModel> RapidJsonParseArray(const wchar_t *source) noexcept
@@ -296,76 +313,7 @@ std::vector<SampleModel> MTLParseArray(const wchar_t *source) noexcept
         ComPtr<IJsonObject> jsonObject;
         jsonValue->GetObject(&jsonObject);
 
-        HString id;
-        double_t index;
-        HString guid;
-        double_t balance;
-        HString picture;
-        double_t age;
-        HString name;
-        HString gender;
-        HString company;
-        HString email;
-        HString phone;
-        HString address;
-        HString about;
-        double_t latitude;
-        double_t longitude;
-        vector<wstring> tags;
-        HString greeting;
-        boolean isActive;
-
-        jsonObject->GetNamedString(HStringReference(L"_id").Get(), &id);
-        jsonObject->GetNamedNumber(HStringReference(L"index").Get(), &index);
-        jsonObject->GetNamedString(HStringReference(L"guid").Get(), &guid);
-        jsonObject->GetNamedNumber(HStringReference(L"balance").Get(), &balance);
-        jsonObject->GetNamedString(HStringReference(L"picture").Get(), &picture);
-        jsonObject->GetNamedNumber(HStringReference(L"age").Get(), &age);
-        jsonObject->GetNamedString(HStringReference(L"name").Get(), &name);
-        jsonObject->GetNamedString(HStringReference(L"gender").Get(), &gender);
-        jsonObject->GetNamedString(HStringReference(L"company").Get(), &company);
-        jsonObject->GetNamedString(HStringReference(L"email").Get(), &email);
-        jsonObject->GetNamedString(HStringReference(L"phone").Get(), &phone);
-        jsonObject->GetNamedString(HStringReference(L"address").Get(), &address);
-        jsonObject->GetNamedString(HStringReference(L"about").Get(), &about);
-        jsonObject->GetNamedNumber(HStringReference(L"latitude").Get(), &latitude);
-        jsonObject->GetNamedNumber(HStringReference(L"longitude").Get(), &longitude);
-        jsonObject->GetNamedString(HStringReference(L"greeting").Get(), &greeting);
-        jsonObject->GetNamedBoolean(HStringReference(L"isActive").Get(), &isActive);
-
-        ComPtr<IJsonArray> tagsJsonArray;
-        jsonObject->GetNamedArray(HStringReference(L"tags").Get(), &tagsJsonArray);
-
-        ComPtr<IIterable<IJsonValue*>> tagsIterable;
-        tagsJsonArray.As(&tagsIterable);
-
-        for (auto tagJsonValue : tagsIterable.Get())
-        {
-            HString tag;
-            if (SUCCEEDED(tagJsonValue->GetString(&tag)))
-            {
-                tags.emplace_back(tag.GetRawBuffer(), tag.Size());
-            }
-        }
-
-        result.emplace_back(wstring(id.GetRawBuffer(), id.Size()),
-                            uint32_t(index),
-                            wstring(guid.GetRawBuffer(), guid.Size()),
-                            double_t(balance),
-                            wstring(picture.GetRawBuffer(), picture.Size()),
-                            uint8_t(age),
-                            wstring(name.GetRawBuffer(), name.Size()),
-                            Gender(wcscmp(L"female", gender.GetRawBuffer()) == 0 ? Gender::Female : Gender::Male),
-                            wstring(company.GetRawBuffer(), company.Size()),
-                            wstring(email.GetRawBuffer(), email.Size()),
-                            wstring(phone.GetRawBuffer(), phone.Size()),
-                            wstring(address.GetRawBuffer(), address.Size()),
-                            wstring(about.GetRawBuffer(), about.Size()),
-                            double_t(latitude),
-                            double_t(longitude),
-                            vector<wstring>(move(tags)),
-                            wstring(greeting.GetRawBuffer(), greeting.Size()),
-                            bool(isActive));
+        result.emplace_back(MTLParseModel(jsonObject.Get()));
     }
 
     return result;
@@ -383,53 +331,7 @@ std::vector<SampleModel> CppCxParseArray(const wchar_t *source) noexcept
 
     for (auto iterator = jsonArray->First(); iterator->HasCurrent; iterator->MoveNext())
     {
-        auto jsonObject = iterator->Current->GetObject();
-
-        auto id = jsonObject->GetNamedString(StringReference(L"_id"));
-        auto index = jsonObject->GetNamedNumber(StringReference(L"index"));
-        auto guid = jsonObject->GetNamedString(StringReference(L"guid"));
-        auto balance = jsonObject->GetNamedNumber(StringReference(L"balance"));
-        auto picture = jsonObject->GetNamedString(StringReference(L"picture"));
-        auto age = jsonObject->GetNamedNumber(StringReference(L"age"));
-        auto name = jsonObject->GetNamedString(StringReference(L"name"));
-        auto gender = jsonObject->GetNamedString(StringReference(L"gender"));
-        auto company = jsonObject->GetNamedString(StringReference(L"company"));
-        auto email = jsonObject->GetNamedString(StringReference(L"email"));
-        auto phone = jsonObject->GetNamedString(StringReference(L"phone"));
-        auto address = jsonObject->GetNamedString(StringReference(L"address"));
-        auto about = jsonObject->GetNamedString(StringReference(L"about"));
-        auto latitude = jsonObject->GetNamedNumber(StringReference(L"latitude"));
-        auto longitude = jsonObject->GetNamedNumber(StringReference(L"longitude"));
-        auto greeting = jsonObject->GetNamedString(StringReference(L"greeting"));
-        auto isActive = jsonObject->GetNamedBoolean(StringReference(L"isActive"));
-
-        vector<wstring> tags;
-        auto tagsArray = jsonObject->GetNamedArray(StringReference(L"tags"));
-        for (auto tagsIterator = tagsArray->First(); tagsIterator->HasCurrent; tagsIterator->MoveNext())
-        {
-            auto tagValue = tagsIterator->Current;
-            auto tagString = tagValue->GetString();
-            tags.emplace_back(tagString->Data(), tagString->Length());
-        }
-
-        result.emplace_back(wstring(id->Data(), id->Length()),
-                            uint32_t(index),
-                            wstring(guid->Data(), guid->Length()),
-                            double_t(balance),
-                            wstring(picture->Data(), picture->Length()),
-                            uint8_t(age),
-                            wstring(name->Data(), name->Length()),
-                            Gender(wcscmp(L"female", gender->Data()) == 0 ? Gender::Female : Gender::Male),
-                            wstring(company->Data(), company->Length()),
-                            wstring(email->Data(), email->Length()),
-                            wstring(phone->Data(), phone->Length()),
-                            wstring(address->Data(), address->Length()),
-                            wstring(about->Data(), about->Length()),
-                            double_t(latitude),
-                            double_t(longitude),
-                            vector<wstring>(move(tags)),
-                            wstring(greeting->Data(), greeting->Length()),
-                            bool(isActive));
+        result.emplace_back(CppCxParseModel(iterator->Current->GetObject()));
     }
 
     return result;
