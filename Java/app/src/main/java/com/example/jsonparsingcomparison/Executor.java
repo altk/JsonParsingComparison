@@ -23,11 +23,14 @@ final class Executor
     {
         try
         {
-            rapidJsonParseArray();
-
             rapidJsonParseModel();
 
-            performComputations();
+            rapidJsonParseArray();
+
+//            parseModel();
+//
+//            parseArray();
+
         }
         catch (Exception e)
         {
@@ -35,7 +38,7 @@ final class Executor
         }
     }
 
-    private static void performComputations() throws Exception
+    private static void parseArray() throws Exception
     {
         final String jsonSource = Data.getBigJson();
 
@@ -45,8 +48,27 @@ final class Executor
 
         final long time = System.currentTimeMillis() - start;
 
-        Log.d("[Executor]", String.valueOf(time));
-        Log.d("[Executor]", String.valueOf(result.size()));
+        Log.i("[Executor.parseArray]", String.valueOf(time));
+        Log.i("[Executor.parseArray]", String.valueOf(result.size()));
+    }
+
+    private static void parseModel() throws Exception
+    {
+        final String jsonSource = Data.getSmallJson();
+
+        final long start = System.currentTimeMillis();
+
+        final ArrayList<SampleModel> result = new ArrayList<>(10000);
+
+        for (int i = 0; i < 10000; i++)
+        {
+            result.add(parseModel(jsonSource));
+        }
+
+        final long time = System.currentTimeMillis() - start;
+
+        Log.i("[Executor.parseModel]", String.valueOf(time));
+        Log.i("[Executor.parseModel]", String.valueOf(result.size()));
     }
 
     private static ArrayList<SampleModel> parseArray(String jsonSource) throws Exception

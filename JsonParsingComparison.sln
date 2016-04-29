@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpp", "Cpp\Cpp.vcxproj", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs", "Cs\Cs.csproj", "{74868444-F2F3-4000-AFDB-1FDB231D9EA4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AndroidCpp", "AndroidCpp\AndroidCpp.vcxproj", "{BCA0387B-464C-496F-A0CD-980B2E5EF66F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -61,22 +59,6 @@ Global
 		{74868444-F2F3-4000-AFDB-1FDB231D9EA4}.Release|x86.ActiveCfg = Release|x86
 		{74868444-F2F3-4000-AFDB-1FDB231D9EA4}.Release|x86.Build.0 = Release|x86
 		{74868444-F2F3-4000-AFDB-1FDB231D9EA4}.Release|x86.Deploy.0 = Release|x86
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|ARM.ActiveCfg = Debug|ARM
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|ARM.Build.0 = Debug|ARM
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|ARM64.Build.0 = Debug|ARM64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|x64.ActiveCfg = Debug|x64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|x64.Build.0 = Debug|x64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|x86.ActiveCfg = Debug|x86
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Debug|x86.Build.0 = Debug|x86
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|ARM.ActiveCfg = Release|ARM
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|ARM.Build.0 = Release|ARM
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|ARM64.ActiveCfg = Release|ARM64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|ARM64.Build.0 = Release|ARM64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|x64.ActiveCfg = Release|x64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|x64.Build.0 = Release|x64
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|x86.ActiveCfg = Release|x86
-		{BCA0387B-464C-496F-A0CD-980B2E5EF66F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
